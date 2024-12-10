@@ -58,7 +58,7 @@ if (array_key_exists("inputs", $_SESSION)) {
 </head>
 
 <body>
-  <section id="errors">
+  <section id="debug">
     <div class="container">
       <?php
       if (isset($_SESSION["errors"])) {
@@ -257,32 +257,30 @@ if (array_key_exists("inputs", $_SESSION)) {
       })
       
       // show the error if it containts texts
-      if (/[a-zA-Z]/.test($('#errors .container').text())) {
-        // custom background of error
-        if ($('#errors p').attr("class") === 'success') {
-          $('#errors').css("background", "#04AA6D")
+      if (/[a-zA-Z]/.test($('#debug .container').text())) {
+        // custom background of debug
+        if ($('#debug p').attr("class") === 'success') {
+          $('#debug').css("background", "#04AA6D")
         } else {
-          $('#errors').css("background", "#dc3545")
+          $('#debug').css("background", "#dc3545")
         }
-        // show error
-        $('#errors').show(2000)
-                    .animate({padding: "20px"}, 500)
+        // show debug
+        $('#debug').show(2000)
+        $('#debug .container').animate({padding: "20px"}, 500)
         setTimeout(function(){
           $('body').css("background", "#d4d4d4")
         }, 0)
       } else {
         // hide error
         $('#errors').hide()
-                    .animate({padding: "0px"}, 200)
-        setTimeout(function(){
-          $('body').css("background", "#f8f9fa")
-        }, 0)
+        $('#debug .container').animate({padding: "0px"}, 200)
       }
 
-      // tap to the window and the error hidden
+      // tap to the window and the debug hidden
       $('body').on("click", function(){
-        $('#errors').hide(500)
-                    .animate({padding: "0px"}, 200)
+        $('#debug .container').animate({padding: "0px"}, 500)
+        $('#debug').delay(500)
+                  .hide(500)
         setTimeout(function(){
           $('body').css("background", "#f8f9fa")
         }, 400)

@@ -192,8 +192,8 @@ label {
   margin-right: 1.125rem;
 }
 
-/* ---------- ERRORS ----------- */
-#errors {
+/* ---------- DEBUG ----------- */
+#debug {
   width: calc(100% - 2em);
   text-align: center;
   background: #90763b;
@@ -206,7 +206,7 @@ label {
   transform: translate(-50%, -50%);
   z-index: 10;
 }
-#errors p {
+#debug p {
   margin: 0;
 }
 

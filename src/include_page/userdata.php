@@ -211,6 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
           if ($stmt->execute()) {
             $_SESSION['email'] = $email;
+            $_SESSION["serial"] = $serial;
           } else {
             $errors["error"] = "Error: " . $stmt->error;
           }
