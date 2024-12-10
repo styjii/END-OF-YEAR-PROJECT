@@ -9,7 +9,7 @@ $emaillog = $passwordlog = '';
 $newusername = $newpassword = $confirmnewpassword = '';
 $newemail = $newfullname = $newphonenumber = '';
 $newlocalisation = $emailto = $message = '';
-$yourusername = $youremail = $yourpassword = $confirmyourpassword = '';
+$serial = $youremail = $yourpassword = $confirmyourpassword = '';
 
 if (array_key_exists("inputs", $_SESSION)) {
   if (array_key_exists('emaillog', $_SESSION["inputs"])) {
@@ -32,8 +32,8 @@ if (array_key_exists("inputs", $_SESSION)) {
     $message = $_SESSION["inputs"]["helpmeassage"];
   }
 
-  if (array_key_exists('yourusername', $_SESSION["inputs"])) {
-    $yourusername = $_SESSION["inputs"]["yourusername"];
+  if (array_key_exists('youremail', $_SESSION["inputs"])) {
+    $serial = $_SESSION["inputs"]["serial"];
     $youremail = $_SESSION["inputs"]["youremail"];
     $yourpassword = $_SESSION["inputs"]["yourpassword"];
     $confirmyourpassword = $_SESSION["inputs"]["confirmyourpassword"];
@@ -122,6 +122,10 @@ if (array_key_exists("inputs", $_SESSION)) {
       const pattern = /[a-zA-Z,\s]{3,100}$/
       inputValidation(element, pattern)
     }
+    function serialValidation(element) {
+      const pattern = /[0-9]{1,5}/
+      inputValidation(element, pattern)
+    }
 
     function confirmPasswordValidation(password, confirmPassword) {
       if (password === confirmPassword.val() && confirmPassword.val() !== ''){
@@ -180,7 +184,7 @@ if (array_key_exists("inputs", $_SESSION)) {
       })
 
       // other input when the page is loading
-      usernameValidation($('#your-username'))
+      serialValidation($('#serial-number'))
       usernameValidation($('#new-username'))
       fullnameValidation($('#new-fullname'))
       phonenumberValidation($('#new-phonenumber'))
@@ -190,8 +194,8 @@ if (array_key_exists("inputs", $_SESSION)) {
       $('#new-username').on("input", function(){
         usernameValidation($(this))
       })
-      $('#your-username').on("input", function(){
-        usernameValidation($(this))
+      $('#serial-number').on("input", function(){
+        serialValidation($(this))
       })
       $('#new-fullname').on("input", function(){
         fullnameValidation($(this))

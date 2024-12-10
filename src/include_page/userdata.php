@@ -107,6 +107,17 @@ function textareaValidation(&$textarea, &$errors) {
     $textarea = try_input($textarea);
   }
 }
+function serialValidation(string &$input, array &$errors) {
+  if (empty($input)) {
+    $errors["serialNumber"] = "Serial number is required !";
+  } else {
+    $input = try_input($input);
+    $pattern = "/[0-9]{5}/";
+    if (!preg_match($pattern, $input)) {
+      $errors["serialNumber"] = "invalid serial number format";
+    }
+  }
+}
 
 // if the user sumbits form information
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -163,7 +174,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     phonenumberValidaton($phonenumber, $errors);
     localisationValidaton($localisation, $errors);
 
+
     if(empty($errors)) {
+      // create serialnumber
+      do{
+        $serial = rand(0, 99999);
+        $serial = (string) sprintf("%05d", $serial);
+
+        // verify the serial if not in the tadabase
+        $checkSerial = $conn->prepare("SELECT serial FROM userdata WHERE serial = ?");
+        $checkSerial->bind_param("s", $serial);
+        $checkSerial->execute();
+        $checkSerial->store_result();
+      } while ($checkSerial->num_rows > 0);
+
       // Check if email already exists
       $checkEmail = $conn->prepare("SELECT email FROM userdata WHERE email = ?");
       $checkEmail->bind_param("s", $email);
@@ -182,8 +206,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors['exist_user'] = "Username ID already exists";
       } else {
           // Prepare and bind
-          $stmt = $conn->prepare("INSERT INTO userdata (username, password, email, fullname, phonenumber, localisation) VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param("ssssss", $username, $password, $email, $fullname, $phonenumber, $localisation);
+          $stmt = $conn->prepare("INSERT INTO userdata (username, password, email, fullname, phonenumber, localisation, serial) VALUES (?, ?, ?, ?, ?, ?, ?)");
+          $stmt->bind_param("sssssss", $username, $password, $email, $fullname, $phonenumber, $localisation, $serial);
 
           if ($stmt->execute()) {
             $_SESSION['email'] = $email;
@@ -194,6 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $stmt->close();
           $checkEmail->close();
           $checkUsername->close();
+          $checkSerial->close();
       }
     }
   }
@@ -214,13 +239,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
   // ----------------- reset password -----------------
-  if (array_key_exists('yourusername', $_POST)) {
-    $username = $_POST["yourusername"];
+  if (array_key_exists('serial', $_POST)) {
+    $serial = $_POST["serial"];
     $email = $_POST["youremail"];
     $password = $_POST["yourpassword"];
     $confirmpassword = $_POST["confirmyourpassword"];
 
-    usernameValidaton($username, $errors);
+    serialValidation($serial, $errors);
     emailValidation($email, $errors);
     passwordValidation($password, $errors);
     confirmPasswordValidation($password, $confirmpassword, $errors);
@@ -233,14 +258,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $checkEmail->execute();
       $checkEmail->store_result();
 
-      // check if username already exists
-      $checkUsername = $conn->prepare("SELECT username FROM userdata WHERE username = ?");
-      $checkUsername->bind_param("s", $username);
-      $checkUsername->execute();
-      $checkUsername->store_result();
+      // check if serial already exists
+      $checkSerial = $conn->prepare("SELECT serial FROM userdata WHERE serial = ?");
+      $checkSerial->bind_param("s", $serial);
+      $checkSerial->execute();
+      $checkSerial->store_result();
 
       // if the account exists in the database
-      if ($checkEmail->num_rows > 0 && ($checkUsername->num_rows > 0)) {
+      if ($checkEmail->num_rows > 0 && ($checkSerial->num_rows > 0)) {
         // Prepare and execute
         $stmt = $conn->prepare("UPDATE userdata SET password = ? WHERE email = ?");
         $stmt->bind_param("ss", $password, $email);
@@ -253,9 +278,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $stmt->close();
         $checkEmail->close();
-        $checkUsername->close();
+        $checkSerial->close();
       } else {
-        $errors["no_exist"] = "Your account does not exists in the database";
+        if (!($checkSerial->num_rows > 0)) {
+          $errors["no_exist"] = "Your Serial does not exists in the database";
+        } else {
+          $errors["no_exist"] = "Your account does not exists in the database";
+        }
       }
     }
   }

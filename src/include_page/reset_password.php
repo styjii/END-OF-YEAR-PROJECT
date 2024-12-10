@@ -2,8 +2,8 @@
   <div class="close"><i class="bi bi-x-circle"></i></div>
   <h1>RESSET PASSWORD</h1>
   <fieldset>
-    <label for="your-username"><i class="bi bi-person-fill"></i></label>
-    <input type="text" value="<?= $yourusername?>" name="yourusername" id="your-username" placeholder="Username">
+    <label for="serial-number"><i class="bi bi-person-fill"></i></label>
+    <input type="text" value="<?= $serial?>" name="serial" id="serial-number" placeholder="Serial Number(5)">
     <span><i class="bi bi-x"></i></span>
   </fieldset>
   <fieldset>
