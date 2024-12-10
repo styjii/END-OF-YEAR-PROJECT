@@ -111,20 +111,19 @@ function textareaValidation(&$textarea, &$errors) {
 // if the user sumbits form information
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $errors = [];
-  $email = '';
   
   // ----------------- login -----------------
   if (array_key_exists('emaillog', $_POST)){
-    $emaillog = $_POST["emaillog"];
-    $passwordlog = $_POST["passwordlog"];
+    $email = $_POST["emaillog"];
+    $password = $_POST["passwordlog"];
 
-    emailValidation($emaillog, $errors);
-    passwordValidation($passwordlog, $errors);
+    emailValidation($email, $errors);
+    passwordValidation($password, $errors);
 
     if(empty($errors)) {
       // Prepare and execute
       $stmt = $conn->prepare("SELECT password FROM userdata WHERE email = ?");
-      $stmt->bind_param("s", $emaillog);
+      $stmt->bind_param("s", $email);
       $stmt->execute();
       $stmt->store_result();
 
@@ -132,8 +131,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $stmt->bind_result($db_password);
           $stmt->fetch();
 
-          if ($passwordlog === $db_password) {
-            $_SESSION["email"] = $emaillog;
+          if ($password === $db_password) {
+            $_SESSION["email"] = $email;
           } else {
             $errors["invalid_password"] = "Incorrect password";
           }
@@ -148,32 +147,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   // ----------------- register -----------------
   if (array_key_exists('newusername', $_POST)) {
-    $newusername = $_POST["newusername"];
-    $newpassword = $_POST["newpassword"];
-    $confirmnewpassword = $_POST["confirmnewpassword"];
-    $newemail = $_POST["newemail"];
-    $newfullname = $_POST["newfullname"];
-    $newphonenumber = $_POST["newphonenumber"];
-    $newlocalisation = $_POST["newlocalisation"];
+    $username = $_POST["newusername"];
+    $password = $_POST["newpassword"];
+    $confirmpassword = $_POST["confirmnewpassword"];
+    $email = $_POST["newemail"];
+    $fullname = $_POST["newfullname"];
+    $phonenumber = $_POST["newphonenumber"];
+    $localisation = $_POST["newlocalisation"];
 
-    usernameValidaton($newusername, $errors);
-    passwordValidation($newpassword, $errors);
-    confirmPasswordValidation($newpassword, $confirmnewpassword, $errors);
-    emailValidation($newemail, $errors);
-    fullnameValidaton($newfullname, $errors);
-    phonenumberValidaton($newphonenumber, $errors);
-    localisationValidaton($newlocalisation, $errors);
+    usernameValidaton($username, $errors);
+    passwordValidation($password, $errors);
+    confirmPasswordValidation($password, $confirmpassword, $errors);
+    emailValidation($email, $errors);
+    fullnameValidaton($fullname, $errors);
+    phonenumberValidaton($phonenumber, $errors);
+    localisationValidaton($localisation, $errors);
 
     if(empty($errors)) {
       // Check if email already exists
       $checkEmail = $conn->prepare("SELECT email FROM userdata WHERE email = ?");
-      $checkEmail->bind_param("s", $newemail);
+      $checkEmail->bind_param("s", $email);
       $checkEmail->execute();
       $checkEmail->store_result();
 
       // check if username already exists
       $checkUsername = $conn->prepare("SELECT username FROM userdata WHERE username = ?");
-      $checkUsername->bind_param("s", $newusername);
+      $checkUsername->bind_param("s", $username);
       $checkUsername->execute();
       $checkUsername->store_result();
 
@@ -184,10 +183,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       } else {
           // Prepare and bind
           $stmt = $conn->prepare("INSERT INTO userdata (username, password, email, fullname, phonenumber, localisation) VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param("ssssss", $newusername, $newpassword, $newemail, $newfullname, $newphonenumber, $newlocalisation);
+          $stmt->bind_param("ssssss", $username, $password, $email, $fullname, $phonenumber, $localisation);
 
           if ($stmt->execute()) {
-            $_SESSION['email'] = $newemail;
+            $_SESSION['email'] = $email;
           } else {
             $errors["error"] = "Error: " . $stmt->error;
           }
@@ -201,46 +200,74 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   // ----------------- help -----------------
   if (array_key_exists('emailto', $_POST)) {
-    $emailto = $_POST["emailto"];
+    $email = $_POST["emailto"];
     $message = $_POST["helpmeassage"];
 
-    emailValidation($emailto, $errors);
+    emailValidation($email, $errors);
     textareaValidation($message, $errors);
 
 
     if (empty($errors)) {
       $_SESSION["success"] = "Message sent";
-
-      header("location: ../../index.php");
     }
   }
 
 
   // ----------------- reset password -----------------
   if (array_key_exists('yourusername', $_POST)) {
-    $yourusername = $_POST["yourusername"];
-    $youremail = $_POST["youremail"];
-    $yourpassword = $_POST["yourpassword"];
-    $confirmyourpassword = $_POST["confirmyourpassword"];
+    $username = $_POST["yourusername"];
+    $email = $_POST["youremail"];
+    $password = $_POST["yourpassword"];
+    $confirmpassword = $_POST["confirmyourpassword"];
 
-    usernameValidaton($yourusername, $errors);
-    emailValidation($youremail, $errors);
-    passwordValidation($yourpassword, $errors);
-    confirmPasswordValidation($yourpassword, $confirmyourpassword, $errors);
+    usernameValidaton($username, $errors);
+    emailValidation($email, $errors);
+    passwordValidation($password, $errors);
+    confirmPasswordValidation($password, $confirmpassword, $errors);
 
-    if (empty($errors)) {
-      $_SESSION["success"] = "Password changed";
+    
+    if(empty($errors)) {
+      // Check if email already exists
+      $checkEmail = $conn->prepare("SELECT email FROM userdata WHERE email = ?");
+      $checkEmail->bind_param("s", $email);
+      $checkEmail->execute();
+      $checkEmail->store_result();
 
-      header("location: ../../index.php");
+      // check if username already exists
+      $checkUsername = $conn->prepare("SELECT username FROM userdata WHERE username = ?");
+      $checkUsername->bind_param("s", $username);
+      $checkUsername->execute();
+      $checkUsername->store_result();
+
+      // if the account exists in the database
+      if ($checkEmail->num_rows > 0 && ($checkUsername->num_rows > 0)) {
+        // Prepare and execute
+        $stmt = $conn->prepare("UPDATE userdata SET password = ? WHERE email = ?");
+        $stmt->bind_param("ss", $password, $email);
+
+        if ($stmt->execute()) {
+          $_SESSION["success"] = "Password updated successfully";
+        } else {
+          $_SESSION["errors"] = "Error updating password";
+        }
+
+        $stmt->close();
+        $checkEmail->close();
+        $checkUsername->close();
+      } else {
+        $errors["no_exist"] = "Your account does not exists in the database";
+      }
     }
   }
 
 
-  // ----------------------------------------------------
-  if (!empty($errors)) {
-    $_SESSION["errors"] = $errors;
-    $_SESSION["inputs"] = $_POST;
-
+  // ------------------- END OF SCRIPT --------------------------
+  if (!empty($errors) || !empty($_SESSION["success"])) {
+    if (!empty($errors)) {
+      $_SESSION["errors"] = $errors;
+      $_SESSION["inputs"] = $_POST;
+    }
+    
     header("Location: ../../index.php");
   } else {
     header("Location: ./../page/home.php");

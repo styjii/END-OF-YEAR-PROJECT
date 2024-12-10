@@ -158,7 +158,9 @@ if (array_key_exists("inputs", $_SESSION)) {
         element.on("input", function(){
           passwordValidation($(this))
           
-          if ($(this).attr('id') === 'new-password' | 'your-password'){
+          if ($(this).attr('id') === 'new-password'){
+            passwrd = $(this).val()
+          } else if ($(this).attr('id') === 'your-password') {
             passwrd = $(this).val()
           }
         })
