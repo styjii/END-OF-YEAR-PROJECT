@@ -9,6 +9,7 @@ $emaillog = $passwordlog = '';
 $newusername = $newpassword = $confirmnewpassword = '';
 $newemail = $newfullname = $newphonenumber = '';
 $newlocalisation = $emailto = $message = '';
+$yourusername = $youremail = $yourpassword = $confirmyourpassword = '';
 
 if (array_key_exists("inputs", $_SESSION)) {
   if (array_key_exists('emaillog', $_SESSION["inputs"])) {
@@ -29,6 +30,13 @@ if (array_key_exists("inputs", $_SESSION)) {
   if (array_key_exists('emailto', $_SESSION["inputs"])) {
     $emailto = $_SESSION["inputs"]["emailto"];
     $message = $_SESSION["inputs"]["helpmeassage"];
+  }
+
+  if (array_key_exists('emailto', $_SESSION["inputs"])) {
+    $yourusername = $_SESSION["inputs"]["yourusername"];
+    $youremail = $_SESSION["inputs"]["youremail"];
+    $yourpassword = $_SESSION["inputs"]["yourpassword"];
+    $confirmyourpassword = $_SESSION["inputs"]["confirmyourpassword"];
   }
 }
 ?>
@@ -70,6 +78,7 @@ if (array_key_exists("inputs", $_SESSION)) {
 
     <section id="login">
       <?php
+      include_once "./src/include_page/resetpassword.php";
       include_once "./src/include_page/login.php";
       include_once "./src/include_page/register.php";
       ?>
@@ -100,9 +109,10 @@ if (array_key_exists("inputs", $_SESSION)) {
 
     $(document).ready(function(){
       // ------------------------ input ---------------------------
-      const email = [$('#email-to'), $('#email-log'), $('#new-email')]
-      const password = [$('#password-log'), $('#new-password')]
+      const email = [$('#email-to'), $('#email-log'), $('#new-email'), $('#your-email')]
+      const password = [$('#password-log'), $('#new-password'), $('#your-password')]
       let newpassword = ($('#new-password').val())? $('#new-password').val() : ''
+      let yourpassword = ($('#your-password').val())? $('#your-password').val() : ''
 
       email.forEach(element => {
         element.on("input", function(){
@@ -117,13 +127,21 @@ if (array_key_exists("inputs", $_SESSION)) {
           if ($(this).attr('id') === $('#new-password').attr('id')){
             newpassword = $(this).val()
           }
+          if ($(this).attr('id') === $('#your-password').attr('id')){
+            yourpassword = $(this).val()
+          }
         })
         inputValidation($(element), /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
       })
       $('#confirm-password').on("input", function(){
         confirmPasswordValidation(newpassword, $(this))
       })
+      $('#confirm-your-password').on("input", function(){
+        confirmPasswordValidation(yourpassword, $(this))
+      })
       confirmPasswordValidation(newpassword, $('#confirm-password'))
+      confirmPasswordValidation(yourpassword, $('#confirm-your-password'))
+      inputValidation($('#your-username'), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
       inputValidation($('#new-username'), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
       inputValidation($('#new-fullname'), /^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/)
       inputValidation($('#new-phonenumber'), /^\+?[1-9][0-9]{7,14}$/)
@@ -131,6 +149,9 @@ if (array_key_exists("inputs", $_SESSION)) {
       
 
       $('#new-username').on("input", function(){
+        inputValidation($(this), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
+      })
+      $('#your-username').on("input", function(){
         inputValidation($(this), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
       })
       $('#new-fullname').on("input", function(){
@@ -152,11 +173,23 @@ if (array_key_exists("inputs", $_SESSION)) {
             $('body').attr("class", "shadow")
           }
         }, 1000)
-      })  
+      })
+      $('.resetpassword').on("click", function(){
+        $('#reset-password').animate({top: '50%'}, 1100)
+
+        setTimeout(function(){
+          if (parseInt($('#reset-password').css("top")) < 0) {
+            $('body').attr("class", "shadow")
+          }
+        }, 1000)
+      })
       $('.close').on("click", function(){
         $(this).parent().animate({top: '-200%'}, 1000)
         setTimeout(function(){
           if ($('#help').css("position") === "absolute") {
+            $('body').attr("class", "light")
+          }
+          if (parseInt($('#reset-password').css("top")) < 0) {
             $('body').attr("class", "light")
           }
         }, 500)

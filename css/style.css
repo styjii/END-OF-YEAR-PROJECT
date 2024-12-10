@@ -66,6 +66,7 @@ main {
   flex-flow: row wrap;
   justify-content: space-around;
   align-items: center;
+  min-height: 100vh;
 }
 main h1 {
   font-size: 1.5em;
@@ -191,7 +192,7 @@ label {
   margin-right: 1.125rem;
 }
 
-/* ---------- LOGIN ----------- */
+/* ---------- ERRORS ----------- */
 #errors {
   width: calc(100% - 2em);
   text-align: center;
@@ -204,6 +205,26 @@ label {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
+}
+#errors p {
+  margin: 0;
+}
+
+/* ---------- RESET PASSWORD ----------- */
+#reset-password {
+  max-width: calc(50% -  4.166em);
+  min-width: calc(45% - 2.083em);
+  box-sizing: border-box;
+  background: #e5e5e5;
+  position: absolute;
+  left: 50%;
+  top: -300%;
+  transform: translate(-50%, -50%);
+  padding: 1.042em;
+  z-index: 5;
+}
+#reset-password .close {
+  display: block;
 }
 
 
@@ -222,6 +243,7 @@ label {
   main {
     flex-direction: column;
   }
+  #reset-password,
   #help,
   #login {
     max-width: calc(100% - 5rem);

@@ -16,7 +16,7 @@
   <input type="submit" value="LOGIN NOW">
 
   <ul class="tools">
-    <li>Forget Password?</li>
+    <li class="resetpassword">Forget Password?</li>
     <li class="help">help</li>
     <li class="change-mode">Sing Up</li>
   </ul>

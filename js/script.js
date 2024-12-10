@@ -40,4 +40,13 @@ window.addEventListener('load', function(){
       }
     })
   })
+  document.querySelector('#reset-password').addEventListener("submit", function(event){
+    const spans = [...document.querySelectorAll('#reset-password input + span > .bi')]
+    
+    spans.forEach(span => {
+      if (span.className === "bi bi-x") {
+        event.preventDefault()
+      }
+    })
+  })
 })
