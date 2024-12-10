@@ -2,6 +2,8 @@
 session_start();
 include './database/db_connect.php';
 
+
+// ----------------- input validation -----------------
 function try_input(string $input): string {
   $input = trim($input);
   $input = stripslashes($input);
@@ -9,7 +11,6 @@ function try_input(string $input): string {
 
   return $input;
 }
-
 function emailValidation(string &$email, array &$errors): void {
   if (empty($email)) {
     $errors["email"] = "email is required !";
@@ -52,6 +53,50 @@ function otherInputValidation(string &$input, string $inputName, array &$errors,
     $input = try_input($input);
     if (!preg_match($pattern, $input)) {
       $errors[$inputName] = "invalid $inputName format";
+    }
+  }
+}
+function usernameValidaton(string &$input, array &$errors): void {
+  if (empty($input)) {
+    $errors["username"] = "username is required !";
+  } else {
+    $input = try_input($input);
+    $pattern =  "/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/";
+    if (!preg_match($pattern, $input)) {
+      $errors["username"] = "invalid username format";
+    }
+  }
+}
+function fullnameValidaton(string &$input, array &$errors): void {
+  if (empty($input)) {
+    $errors["fullname"] = "fullname is required !";
+  } else {
+    $input = try_input($input);
+    $pattern = "/^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/";
+    if (!preg_match($pattern, $input)) {
+      $errors["fullname"] = "invalid fullname format";
+    }
+  }
+}
+function phonenumberValidaton(string &$input, array &$errors): void {
+  if (empty($input)) {
+    $errors["phonenumber"] = "phone number is required !";
+  } else {
+    $input = try_input($input);
+    $pattern = "/^\+?[1-9][0-9]{7,14}$/";
+    if (!preg_match($pattern, $input)) {
+      $errors["phonenumber"] = "invalid phone number format";
+    }
+  }
+}
+function localisationValidaton(string &$input, array &$errors): void {
+  if (empty($input)) {
+    $errors["phonenumber"] = "phone number is required !";
+  } else {
+    $input = try_input($input);
+    $pattern = "/[a-zA-Z,\s]/";
+    if (!preg_match($pattern, $input)) {
+      $errors["phonenumber"] = "invalid phone number format";
     }
   }
 }
@@ -111,13 +156,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $newphonenumber = $_POST["newphonenumber"];
     $newlocalisation = $_POST["newlocalisation"];
 
-    otherInputValidation($newusername, 'username', $errors, "/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/");
+    usernameValidaton($newusername, $errors);
     passwordValidation($newpassword, $errors);
     confirmPasswordValidation($newpassword, $confirmnewpassword, $errors);
     emailValidation($newemail, $errors);
-    otherInputValidation($newfullname, 'fullname', $errors, "/^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/");
-    otherInputValidation($newphonenumber, 'phone number', $errors, "/^\+?[1-9][0-9]{7,14}$/");
-    otherInputValidation($newlocalisation, 'localisation', $errors, "/[a-zA-Z,\s]/");
+    fullnameValidaton($newfullname, $errors);
+    phonenumberValidaton($newphonenumber, $errors);
+    localisationValidaton($newlocalisation, $errors);
 
     if(empty($errors)) {
       // Check if email already exists
@@ -165,6 +210,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($errors)) {
       $_SESSION["success"] = "Message sent";
+
+      header("location: ../../index.php");
+    }
+  }
+
+
+  // ----------------- reset password -----------------
+  if (array_key_exists('yourusername', $_POST)) {
+    $yourusername = $_POST["yourusername"];
+    $youremail = $_POST["youremail"];
+    $yourpassword = $_POST["yourpassword"];
+    $confirmyourpassword = $_POST["confirmyourpassword"];
+
+    usernameValidaton($yourusername, $errors);
+    emailValidation($youremail, $errors);
+    passwordValidation($yourpassword, $errors);
+    confirmPasswordValidation($yourpassword, $confirmyourpassword, $errors);
+
+    if (empty($errors)) {
+      $_SESSION["success"] = "Password changed";
 
       header("location: ../../index.php");
     }

@@ -32,7 +32,7 @@ if (array_key_exists("inputs", $_SESSION)) {
     $message = $_SESSION["inputs"]["helpmeassage"];
   }
 
-  if (array_key_exists('emailto', $_SESSION["inputs"])) {
+  if (array_key_exists('yourusername', $_SESSION["inputs"])) {
     $yourusername = $_SESSION["inputs"]["yourusername"];
     $youremail = $_SESSION["inputs"]["youremail"];
     $yourpassword = $_SESSION["inputs"]["yourpassword"];
@@ -63,11 +63,11 @@ if (array_key_exists("inputs", $_SESSION)) {
       <?php
       if (isset($_SESSION["errors"])) {
         foreach ($_SESSION["errors"] as $error) {
-          echo "<p>" . $error . "</p>";
+          echo "<p class='errors'>" . $error . "</p>";
         }
       }
       if (isset($_SESSION["success"])) {
-        echo "<p>" . $_SESSION["success"] . "</p>";
+        echo "<p class='success'>" . $_SESSION["success"] . "</p>";
       }
       ?>
     </div>
@@ -88,6 +88,7 @@ if (array_key_exists("inputs", $_SESSION)) {
   <!-- jquery -->
   <script src="js/jquery.js"></script>
   <script>
+    // all inputs validation
     function inputValidation(element, pattern) {
       if (pattern.test(element.val())) {
         element.next().children().attr("class", "bi bi-check")
@@ -97,6 +98,31 @@ if (array_key_exists("inputs", $_SESSION)) {
         element.next().children().css("color", "#dc3545")
       }
     }
+    function emailValidation(element) {
+      const pattern = /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/
+      inputValidation(element, pattern)
+    }
+    function passwordValidation(element) {
+      const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+      inputValidation(element, pattern)
+    }
+    function usernameValidation(element) {
+      const pattern = /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/
+      inputValidation(element, pattern)
+    }
+    function fullnameValidation(element) {
+      const pattern = /^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/
+      inputValidation(element, pattern)
+    }
+    function phonenumberValidation(element) {
+      const pattern = /^\+?[1-9][0-9]{7,14}$/
+      inputValidation(element, pattern)
+    }
+    function localisationValidation(element) {
+      const pattern = /[a-zA-Z,\s]{3,100}$/
+      inputValidation(element, pattern)
+    }
+
     function confirmPasswordValidation(password, confirmPassword) {
       if (password === confirmPassword.val() && confirmPassword.val() !== ''){
         confirmPassword.next().children().attr("class", "bi bi-check")
@@ -111,78 +137,94 @@ if (array_key_exists("inputs", $_SESSION)) {
       // ------------------------ input ---------------------------
       const email = [$('#email-to'), $('#email-log'), $('#new-email'), $('#your-email')]
       const password = [$('#password-log'), $('#new-password'), $('#your-password')]
-      let newpassword = ($('#new-password').val())? $('#new-password').val() : ''
-      let yourpassword = ($('#your-password').val())? $('#your-password').val() : ''
+      
+      let passwrd = ''
+      if ($('#new-password').val() !== '') {
+        passwrd = $('#new-password').val()
+      } else if ($('#your-password').val() !== '') {
+        passwrd = $('#your-password').val()
+      }
 
       email.forEach(element => {
+        // email validation when type a text
         element.on("input", function(){
-          inputValidation($(this), /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/)
+          emailValidation($(this))
         })
-        inputValidation($(element), /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/)
+        // email validation when the page is loading
+        emailValidation(element)
       })
       password.forEach(element => {
+        // password validation when type a text
         element.on("input", function(){
-          inputValidation($(this), /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
-
-          if ($(this).attr('id') === $('#new-password').attr('id')){
-            newpassword = $(this).val()
-          }
-          if ($(this).attr('id') === $('#your-password').attr('id')){
-            yourpassword = $(this).val()
+          passwordValidation($(this))
+          
+          if ($(this).attr('id') === 'new-password' | 'your-password'){
+            passwrd = $(this).val()
           }
         })
-        inputValidation($(element), /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
+        // password validation when the page is loading
+        passwordValidation(element)
       })
+
+      // password confirmaiton validatoin when the page is loading
+      confirmPasswordValidation(passwrd, $('#confirm-password'))
+      confirmPasswordValidation(passwrd, $('#confirm-your-password'))
+      // password confirmaiton validatoin when type a text
       $('#confirm-password').on("input", function(){
-        confirmPasswordValidation(newpassword, $(this))
+        confirmPasswordValidation(passwrd, $(this))
       })
       $('#confirm-your-password').on("input", function(){
-        confirmPasswordValidation(yourpassword, $(this))
+        confirmPasswordValidation(passwrd, $(this))
       })
-      confirmPasswordValidation(newpassword, $('#confirm-password'))
-      confirmPasswordValidation(yourpassword, $('#confirm-your-password'))
-      inputValidation($('#your-username'), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
-      inputValidation($('#new-username'), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
-      inputValidation($('#new-fullname'), /^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/)
-      inputValidation($('#new-phonenumber'), /^\+?[1-9][0-9]{7,14}$/)
-      inputValidation($('#new-localisation'), /[a-zA-Z,\s]{3,100}$/)
-      
 
+      // other input when the page is loading
+      usernameValidation($('#your-username'))
+      usernameValidation($('#new-username'))
+      fullnameValidation($('#new-fullname'))
+      phonenumberValidation($('#new-phonenumber'))
+      localisationValidation($('#new-localisation'))
+      
+      // other input validatoin when type a text
       $('#new-username').on("input", function(){
-        inputValidation($(this), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
+        usernameValidation($(this))
       })
       $('#your-username').on("input", function(){
-        inputValidation($(this), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
+        usernameValidation($(this))
       })
       $('#new-fullname').on("input", function(){
-        inputValidation($(this), /^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/)
+        fullnameValidation($(this))
       })
       $('#new-phonenumber').on("input", function(){
-        inputValidation($(this), /^\+?[1-9][0-9]{7,14}$/)
+        phonenumberValidation($(this))
       })
       $('#new-localisation').on("input", function(){
-        inputValidation($(this), /[a-zA-Z,\s]{3,100}/)
+        localisationValidation($(this))
       })
 
       // --------------------- element --------------------------
+      // When .help is targeted, #help is in the middle
       $('.help').on("click", function(){
         $('#help').animate({top: '25px'}, 1100)
-
+        
         setTimeout(function(){
           if ($('#help').css("position") === "absolute") {
             $('body').attr("class", "shadow")
           }
         }, 1000)
       })
+
+      // When .resetpassword is targeted, #reset-password is in the middle
       $('.resetpassword').on("click", function(){
         $('#reset-password').animate({top: '50%'}, 1100)
-
+        
         setTimeout(function(){
           if (parseInt($('#reset-password').css("top")) < 0) {
             $('body').attr("class", "shadow")
           }
         }, 1000)
       })
+
+      // When x is targeted, his parent is hidden
       $('.close').on("click", function(){
         $(this).parent().animate({top: '-200%'}, 1000)
         setTimeout(function(){
@@ -194,6 +236,8 @@ if (array_key_exists("inputs", $_SESSION)) {
           }
         }, 500)
       })
+
+      // change login or register
       $('.change-mode').on("click", function(){
         if ($('.sing-in').attr("style") === "display: block;"){
           $('.sing-in').hide(500)
@@ -206,14 +250,22 @@ if (array_key_exists("inputs", $_SESSION)) {
         }
       })
       
-      // show the error
+      // show the error if it containts texts
       if (/[a-zA-Z]/.test($('#errors .container').text())) {
+        // custom background of error
+        if ($('#errors p').attr("class") === 'success') {
+          $('#errors').css("background", "#04AA6D")
+        } else {
+          $('#errors').css("background", "#dc3545")
+        }
+        // show error
         $('#errors').show(2000)
                     .animate({padding: "20px"}, 500)
         setTimeout(function(){
           $('body').css("background", "#d4d4d4")
         }, 0)
       } else {
+        // hide error
         $('#errors').hide()
                     .animate({padding: "0px"}, 200)
         setTimeout(function(){
