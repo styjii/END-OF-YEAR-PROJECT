@@ -68,11 +68,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $errors = [];
   $email = '';
   
-  // ----------------- sing-in form -----------------
+  // ----------------- login -----------------
   if (array_key_exists('emaillog', $_POST)){
     $emaillog = $_POST["emaillog"];
     $passwordlog = $_POST["passwordlog"];
-    $email = $emaillog;
 
     emailValidation($emaillog, $errors);
     passwordValidation($passwordlog, $errors);
@@ -94,11 +93,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       } else {
           $errors["no_exists_email"] = "Email not found";
       }
+    } else {
+      $_SESSION['email'] = $emaillog;
     }
 
   }
 
-  // ----------------- sing-up form -----------------
+  // ----------------- register -----------------
   if (array_key_exists('newusername', $_POST)) {
     $newusername = $_POST["newusername"];
     $newpassword = $_POST["newpassword"];
@@ -107,7 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $newfullname = $_POST["newfullname"];
     $newphonenumber = $_POST["newphonenumber"];
     $newlocalisation = $_POST["newlocalisation"];
-    $email = $newemail;
 
     otherInputValidation($newusername, 'username', $errors, "/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/");
     passwordValidation($newpassword, $errors);
@@ -139,8 +139,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $stmt = $conn->prepare("INSERT INTO userdata (username, password, email, fullname, phonenumber, localisation) VALUES (?, ?, ?, ?, ?, ?)");
           $stmt->bind_param("ssssss", $newusername, $newpassword, $newemail, $newfullname, $newphonenumber, $newlocalisation);
 
-          if (!$stmt->execute()) {
-              $errors["error"] = "Error: " . $stmt->error;
+          if ($stmt->execute()) {
+            $_SESSION['email'] = $newemail;
+          } else {
+            $errors["error"] = "Error: " . $stmt->error;
           }
 
           $checkEmail->close();
@@ -149,13 +151,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
   }
 
-  // ----------------- information form -----------------
+  // ----------------- help -----------------
   if (array_key_exists('emailto', $_POST)) {
     $emailto = $_POST["emailto"];
     $message = $_POST["helpmeassage"];
 
     emailValidation($emailto, $errors);
     textareaValidation($message, $errors);
+
+
+    if (empty($errors)) {
+      $_SESSION["success"] = "Message sent";
+
+      header("location: ../../index.php");
+    }
   }
 
 
@@ -166,7 +175,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     header("Location: ../../index.php");
   } else {
-    $_SESSION['email'] = $email;
     header("Location: ./../page/home.php");
     exit();
   }

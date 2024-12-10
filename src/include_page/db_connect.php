@@ -1,7 +1,7 @@
 <?php
-$servername = "0.0.0.0";
+$servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "";
 $dbname = "espace_admin";
 
 // Create connection

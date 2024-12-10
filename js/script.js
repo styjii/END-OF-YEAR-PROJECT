@@ -13,11 +13,11 @@ window.addEventListener('load', function(){
   })
 
   // ----------------------------- submit ------------------------------
-  document.querySelector('#information > .form-control').addEventListener("submit", function(event){
-    const spans = [...document.querySelectorAll('#information input + span > .bi')]
+  document.querySelector('#help > .form-control').addEventListener("submit", function(event){
+    const spans = [...document.querySelectorAll('#help input + span > .bi')]
 
     spans.forEach(span => {
-      if (span.className === "bi bi-x" || document.querySelector('#information textarea').value === '') {
+      if (span.className === "bi bi-x" || document.querySelector('#help textarea').value === '') {
         event.preventDefault()
       }
     })

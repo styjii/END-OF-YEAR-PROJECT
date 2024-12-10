@@ -55,20 +55,23 @@ if (array_key_exists("inputs", $_SESSION)) {
       <?php
       if (isset($_SESSION["errors"])) {
         foreach ($_SESSION["errors"] as $error) {
-          echo $error . "<br>";
+          echo "<p>" . $error . "</p>";
         }
+      }
+      if (isset($_SESSION["success"])) {
+        echo "<p>" . $_SESSION["success"] . "</p>";
       }
       ?>
     </div>
   </section>
 
   <main>
-    <?php include_once "./src/include_page/information.php"?>
+    <?php include_once "./src/include_page/help.php"?>
 
     <section id="login">
       <?php
-      include_once "./src/include_page/sing_in.php";
-      include_once "./src/include_page/sing_up.php";
+      include_once "./src/include_page/login.php";
+      include_once "./src/include_page/register.php";
       ?>
     </section>
   </main>
@@ -142,10 +145,10 @@ if (array_key_exists("inputs", $_SESSION)) {
 
       // --------------------- element --------------------------
       $('.help').on("click", function(){
-        $('#information').animate({top: '25px'}, 1100)
+        $('#help').animate({top: '25px'}, 1100)
 
         setTimeout(function(){
-          if ($('#information').css("position") === "absolute") {
+          if ($('#help').css("position") === "absolute") {
             $('body').attr("class", "shadow")
           }
         }, 1000)
@@ -153,7 +156,7 @@ if (array_key_exists("inputs", $_SESSION)) {
       $('.close').on("click", function(){
         $(this).parent().animate({top: '-200%'}, 1000)
         setTimeout(function(){
-          if ($('#information').css("position") === "absolute") {
+          if ($('#help').css("position") === "absolute") {
             $('body').attr("class", "light")
           }
         }, 500)
@@ -162,11 +165,11 @@ if (array_key_exists("inputs", $_SESSION)) {
         if ($('.sing-in').attr("style") === "display: block;"){
           $('.sing-in').hide(500)
           $('.sing-up').show(500)
-          $('#information .mode').text("login")
+          $('#help .mode').text("login")
         } else {
           $('.sing-in').show(500)
           $('.sing-up').hide(500)
-          $('#information .mode').text("create an account")
+          $('#help .mode').text("create an account")
         }
       })
       
@@ -201,4 +204,5 @@ if (array_key_exists("inputs", $_SESSION)) {
 <?php
 unset($_SESSION["inputs"]);
 unset($_SESSION["errors"]);
+unset($_SESSION["success"]);
 ?>

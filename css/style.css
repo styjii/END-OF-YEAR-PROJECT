@@ -153,14 +153,14 @@ label {
 }
 
 /* ---------- INFORMATION ----------- */
-#information {
+#help {
   max-width: calc(50% -  4.166em);
   min-width: calc(45% - 2.083em);
   box-sizing: border-box;
   padding: 1.042em;
 }
-#information a,
-#information .change-mode {
+#help a,
+#help .change-mode {
   cursor: pointer;
   color: var(--green-color--);
   font-weight: bold;
@@ -222,12 +222,12 @@ label {
   main {
     flex-direction: column;
   }
-  #information,
+  #help,
   #login {
     max-width: calc(100% - 5rem);
     min-width: calc(27.75rem + 2.875rem);
   }
-  #information {
+  #help {
     background: #e5e5e5;
     border-radius: 16px;
     position: absolute;

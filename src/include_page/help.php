@@ -1,4 +1,4 @@
-<section id="information">
+<section id="help">
   <div class="close"><i class="bi bi-x-circle"></i></div>
   <h1>Welcom to online sale</h1>
   <p>
@@ -8,15 +8,17 @@
   </p>
 
   <p>
-    This website is specializing for people who wants to sell Laptop, Android, Iphone, ... <br>
+    This website is specializing for people who wants to sell Laptop, 
+    Android, Iphone, ... <br>
   </p>
 
   <p>
     If you have a problem when connecting, you can inform me directly 
-    below or <a href="page/help.php">click here</a> to see the help <br>
+    below or <a href="page/about.php">click here</a> to see the 
+    about of page <br>
   </p>
   
-  <form class="form-control" action="./src/page/home.php" method="post">
+  <form class="form-control" action="./src/include_page/userdata.php" method="post">
     <fieldset>
       <label for="email-to"><i class="bi bi-envelope"></i></label>
       <input type="email" value="<?= $emailto?>" name="emailto" id="email-to" placeholder="Email">

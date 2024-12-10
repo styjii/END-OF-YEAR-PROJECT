@@ -1,4 +1,4 @@
-<form action="./src/include_page/data.php" method="post" class="sing-up" style="display: none;">
+<form action="./src/include_page/userdata.php" method="post" class="sing-up" style="display: none;">
   <h1>CREATE ACCOUNT</h1>
   <fieldset>
     <label for="new-username"><i class="bi bi-person-fill"></i></label>
