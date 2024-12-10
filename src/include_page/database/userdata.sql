@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Dec 24, 2024 at 07:44 PM
--- Server version: 10.4.6-MariaDB
--- PHP Version: 7.3.10
+-- Hôte : 127.0.0.1
+-- Généré le : mar. 10 déc. 2024 à 17:21
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `espace_admin`
+-- Base de données : `espace_admin`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `userdata`
+-- Structure de la table `userdata`
 --
 
 CREATE TABLE `userdata` (
@@ -34,26 +34,27 @@ CREATE TABLE `userdata` (
   `password` varchar(45) NOT NULL,
   `fullname` varchar(100) NOT NULL,
   `phonenumber` varchar(14) NOT NULL,
-  `localisation` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `localisation` varchar(100) NOT NULL,
+  `serial` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Indexes for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Indexes for table `userdata`
+-- Index pour la table `userdata`
 --
 ALTER TABLE `userdata`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id_UNIQUE` (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT for table `userdata`
+-- AUTO_INCREMENT pour la table `userdata`
 --
 ALTER TABLE `userdata`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

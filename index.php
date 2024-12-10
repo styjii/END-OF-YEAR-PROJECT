@@ -78,7 +78,7 @@ if (array_key_exists("inputs", $_SESSION)) {
 
     <section id="login">
       <?php
-      include_once "./src/include_page/resetpassword.php";
+      include_once "./src/include_page/reset_password.php";
       include_once "./src/include_page/login.php";
       include_once "./src/include_page/register.php";
       ?>
