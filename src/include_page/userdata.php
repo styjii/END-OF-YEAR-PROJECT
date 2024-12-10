@@ -1,6 +1,6 @@
 <?php
 session_start();
-include './db_connect.php';
+include './database/db_connect.php';
 
 function try_input(string $input): string {
   $input = trim($input);
@@ -95,6 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       } else {
           $errors["no_exists_email"] = "Email not found";
       }
+
+      $stmt->close();
     }
 
   }
@@ -145,6 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $errors["error"] = "Error: " . $stmt->error;
           }
 
+          $stmt->close();
           $checkEmail->close();
           $checkUsername->close();
       }
@@ -179,7 +182,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit();
   }
 
-  $stmt->close();
   $conn->close();
 }
 ?>
