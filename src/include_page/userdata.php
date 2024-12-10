@@ -87,14 +87,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $stmt->bind_result($db_password);
           $stmt->fetch();
 
-          if (!($passwordlog === $db_password)) {
-              $errors["invalid_password"] = "Incorrect password";
+          if ($passwordlog === $db_password) {
+            $_SESSION["email"] = $emaillog;
+          } else {
+            $errors["invalid_password"] = "Incorrect password";
           }
       } else {
           $errors["no_exists_email"] = "Email not found";
       }
-    } else {
-      $_SESSION['email'] = $emaillog;
     }
 
   }
