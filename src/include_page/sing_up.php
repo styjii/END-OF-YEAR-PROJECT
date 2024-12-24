@@ -1,4 +1,4 @@
-<form action="./src/page/home.php" method="post" class="sing-up" style="display: none;">
+<form action="./src/include_page/data.php" method="post" class="sing-up" style="display: none;">
   <h1>CREATE ACCOUNT</h1>
   <fieldset>
     <label for="new-username"><i class="bi bi-person-fill"></i></label>
@@ -29,7 +29,7 @@
   </fieldset>
   <fieldset>
     <label for="new-phonenumber"><i class="bi bi-telephone-fill"></i></label>
-    <input type="number" value="<?= $newphonenumber?>" name="newphonenumber" id="new-phonenumber" placeholder="Phone Number">
+    <input type="text" value="<?= $newphonenumber?>" name="newphonenumber" id="new-phonenumber" placeholder="Phone Number">
     <span><i class="bi bi-x"></i></span>
   </fieldset>
   <fieldset>

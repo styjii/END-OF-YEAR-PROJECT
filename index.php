@@ -1,4 +1,10 @@
 <?php session_start();
+if (isset($_SESSION['email'])) {
+  header("Location: ./src/page/home.php");
+  exit();
+}
+
+
 $emaillog = $passwordlog = '';
 $newusername = $newpassword = $confirmnewpassword = '';
 $newemail = $newfullname = $newphonenumber = '';
@@ -79,17 +85,27 @@ if (array_key_exists("inputs", $_SESSION)) {
         element.next().children().css("color", "#dc3545")
       }
     }
+    function confirmPasswordValidation(password, confirmPassword) {
+      if (password === confirmPassword.val() && confirmPassword.val() !== ''){
+        confirmPassword.next().children().attr("class", "bi bi-check")
+        confirmPassword.next().children().css("color", "#198754")
+      } else {
+        confirmPassword.next().children().attr("class", "bi bi-x")
+        confirmPassword.next().children().css("color", "#dc3545")
+      }
+    }
 
     $(document).ready(function(){
       // ------------------------ input ---------------------------
       const email = [$('#email-to'), $('#email-log'), $('#new-email')]
       const password = [$('#password-log'), $('#new-password')]
-      let newpassword = ''
+      let newpassword = ($('#new-password').val())? $('#new-password').val() : ''
 
       email.forEach(element => {
-          element.on("input", function(){
-            inputValidation($(this), /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/)
+        element.on("input", function(){
+          inputValidation($(this), /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/)
         })
+        inputValidation($(element), /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/)
       })
       password.forEach(element => {
         element.on("input", function(){
@@ -99,16 +115,17 @@ if (array_key_exists("inputs", $_SESSION)) {
             newpassword = $(this).val()
           }
         })
+        inputValidation($(element), /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
       })
       $('#confirm-password').on("input", function(){
-        if (newpassword === $(this).val()){
-          $(this).next().children().attr("class", "bi bi-check")
-          $(this).next().children().css("color", "#198754")
-        } else {
-          $(this).next().children().attr("class", "bi bi-x")
-          $(this).next().children().css("color", "#dc3545")
-        }
+        confirmPasswordValidation(newpassword, $(this))
       })
+      confirmPasswordValidation(newpassword, $('#confirm-password'))
+      inputValidation($('#new-username'), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
+      inputValidation($('#new-fullname'), /^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/)
+      inputValidation($('#new-phonenumber'), /^\+?[1-9][0-9]{7,14}$/)
+      inputValidation($('#new-localisation'), /[a-zA-Z,\s]{3,100}$/)
+      
 
       $('#new-username').on("input", function(){
         inputValidation($(this), /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/)
@@ -120,7 +137,7 @@ if (array_key_exists("inputs", $_SESSION)) {
         inputValidation($(this), /^\+?[1-9][0-9]{7,14}$/)
       })
       $('#new-localisation').on("input", function(){
-        inputValidation($(this), /[a-zA-Z,\s]/)
+        inputValidation($(this), /[a-zA-Z,\s]{3,100}/)
       })
 
       // --------------------- element --------------------------

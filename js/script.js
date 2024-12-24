@@ -12,7 +12,6 @@ window.addEventListener('load', function(){
     })
   })
 
-  /*
   // ----------------------------- submit ------------------------------
   document.querySelector('#information > .form-control').addEventListener("submit", function(event){
     const spans = [...document.querySelectorAll('#information input + span > .bi')]
@@ -41,5 +40,4 @@ window.addEventListener('load', function(){
       }
     })
   })
-  */
 })

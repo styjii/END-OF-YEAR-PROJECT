@@ -1,4 +1,4 @@
-<form action="./src/page/home.php" method="post" class="sing-in" style="display: block;">
+<form action="./src/include_page/data.php" method="post" class="sing-in" style="display: block;">
   <h1>LOGIN TO YOUR ACCOUNT</h1>
   <fieldset>
     <label for="email-log"><i class="bi bi-envelope"></i></label>
@@ -12,11 +12,6 @@
     <span><i class="bi bi-x"></i></span>
     <span><i class="bi bi-eye-fill"></i></span>
   </fieldset>
-
-  <label for="check-log">
-    <input type="checkbox" name="checklog" id="check-log">
-    keep me logged in
-  </label>
 
   <input type="submit" value="LOGIN NOW">
 
