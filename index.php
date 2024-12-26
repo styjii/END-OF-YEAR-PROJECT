@@ -52,7 +52,7 @@ if (array_key_exists("inputs", $_SESSION)) {
   <!-- custom css -->
   <link rel="stylesheet" href="icons/bootstrap-icons.css">
   <link rel="stylesheet" href="css/style.css">
-  
+
   <!-- project -->
   <script src="js/script.js"></script>
 </head>
@@ -74,7 +74,7 @@ if (array_key_exists("inputs", $_SESSION)) {
   </section>
 
   <main>
-    <?php include_once "./src/include_page/help.php"?>
+    <?php include_once "./src/include_page/help.php" ?>
 
     <section id="login">
       <?php
@@ -84,7 +84,7 @@ if (array_key_exists("inputs", $_SESSION)) {
       ?>
     </section>
   </main>
-  
+
   <!-- jquery -->
   <script src="js/jquery.js"></script>
   <script>
@@ -98,37 +98,44 @@ if (array_key_exists("inputs", $_SESSION)) {
         element.next().children().css("color", "#dc3545")
       }
     }
+
     function emailValidation(element) {
       const pattern = /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/
       inputValidation(element, pattern)
     }
+
     function passwordValidation(element) {
       const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
       inputValidation(element, pattern)
     }
+
     function usernameValidation(element) {
       const pattern = /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/
       inputValidation(element, pattern)
     }
+
     function fullnameValidation(element) {
       const pattern = /^[A-Z][a-zA-Z,',-]{2,50}\s[a-zA-Z,',-]{2,50}$/
       inputValidation(element, pattern)
     }
+
     function phonenumberValidation(element) {
       const pattern = /^\+?[1-9][0-9]{7,14}$/
       inputValidation(element, pattern)
     }
+
     function localisationValidation(element) {
       const pattern = /[a-zA-Z,\s]{3,100}$/
       inputValidation(element, pattern)
     }
+
     function serialValidation(element) {
       const pattern = /[0-9]{1,5}/
       inputValidation(element, pattern)
     }
 
     function confirmPasswordValidation(password, confirmPassword) {
-      if (password === confirmPassword.val() && confirmPassword.val() !== ''){
+      if (password === confirmPassword.val() && confirmPassword.val() !== '') {
         confirmPassword.next().children().attr("class", "bi bi-check")
         confirmPassword.next().children().css("color", "#198754")
       } else {
@@ -137,11 +144,11 @@ if (array_key_exists("inputs", $_SESSION)) {
       }
     }
 
-    $(document).ready(function(){
+    $(document).ready(function() {
       // ------------------------ input ---------------------------
       const email = [$('#email-to'), $('#email-log'), $('#new-email'), $('#your-email')]
       const password = [$('#password-log'), $('#new-password'), $('#your-password')]
-      
+
       let passwrd = ''
       if ($('#new-password').val() !== '') {
         passwrd = $('#new-password').val()
@@ -151,7 +158,7 @@ if (array_key_exists("inputs", $_SESSION)) {
 
       email.forEach(element => {
         // email validation when type a text
-        element.on("input", function(){
+        element.on("input", function() {
           emailValidation($(this))
         })
         // email validation when the page is loading
@@ -159,10 +166,10 @@ if (array_key_exists("inputs", $_SESSION)) {
       })
       password.forEach(element => {
         // password validation when type a text
-        element.on("input", function(){
+        element.on("input", function() {
           passwordValidation($(this))
-          
-          if ($(this).attr('id') === 'new-password'){
+
+          if ($(this).attr('id') === 'new-password') {
             passwrd = $(this).val()
           } else if ($(this).attr('id') === 'your-password') {
             passwrd = $(this).val()
@@ -176,10 +183,10 @@ if (array_key_exists("inputs", $_SESSION)) {
       confirmPasswordValidation(passwrd, $('#confirm-password'))
       confirmPasswordValidation(passwrd, $('#confirm-your-password'))
       // password confirmaiton validatoin when type a text
-      $('#confirm-password').on("input", function(){
+      $('#confirm-password').on("input", function() {
         confirmPasswordValidation(passwrd, $(this))
       })
-      $('#confirm-your-password').on("input", function(){
+      $('#confirm-your-password').on("input", function() {
         confirmPasswordValidation(passwrd, $(this))
       })
 
@@ -189,30 +196,32 @@ if (array_key_exists("inputs", $_SESSION)) {
       fullnameValidation($('#new-fullname'))
       phonenumberValidation($('#new-phonenumber'))
       localisationValidation($('#new-localisation'))
-      
+
       // other input validatoin when type a text
-      $('#new-username').on("input", function(){
+      $('#new-username').on("input", function() {
         usernameValidation($(this))
       })
-      $('#serial-number').on("input", function(){
+      $('#serial-number').on("input", function() {
         serialValidation($(this))
       })
-      $('#new-fullname').on("input", function(){
+      $('#new-fullname').on("input", function() {
         fullnameValidation($(this))
       })
-      $('#new-phonenumber').on("input", function(){
+      $('#new-phonenumber').on("input", function() {
         phonenumberValidation($(this))
       })
-      $('#new-localisation').on("input", function(){
+      $('#new-localisation').on("input", function() {
         localisationValidation($(this))
       })
 
       // --------------------- element --------------------------
       // When .help is targeted, #help is in the middle
-      $('.help').on("click", function(){
-        $('#help').animate({top: '25px'}, 1100)
-        
-        setTimeout(function(){
+      $('.help').on("click", function() {
+        $('#help').animate({
+          top: '1.5625rem'
+        }, 1100)
+
+        setTimeout(function() {
           if ($('#help').css("position") === "absolute") {
             $('body').attr("class", "shadow")
           }
@@ -220,10 +229,12 @@ if (array_key_exists("inputs", $_SESSION)) {
       })
 
       // When .resetpassword is targeted, #reset-password is in the middle
-      $('.resetpassword').on("click", function(){
-        $('#reset-password').animate({top: '50%'}, 1100)
-        
-        setTimeout(function(){
+      $('.resetpassword').on("click", function() {
+        $('#reset-password').animate({
+          top: '50%'
+        }, 1100)
+
+        setTimeout(function() {
           if (parseInt($('#reset-password').css("top")) < 0) {
             $('body').attr("class", "shadow")
           }
@@ -231,9 +242,11 @@ if (array_key_exists("inputs", $_SESSION)) {
       })
 
       // When x is targeted, his parent is hidden
-      $('.close').on("click", function(){
-        $(this).parent().animate({top: '-200%'}, 1000)
-        setTimeout(function(){
+      $('.close').on("click", function() {
+        $(this).parent().animate({
+          top: '-200%'
+        }, 1000)
+        setTimeout(function() {
           if ($('#help').css("position") === "absolute") {
             $('body').attr("class", "light")
           }
@@ -244,8 +257,8 @@ if (array_key_exists("inputs", $_SESSION)) {
       })
 
       // change login or register
-      $('.change-mode').on("click", function(){
-        if ($('.sing-in').attr("style") === "display: block;"){
+      $('.change-mode').on("click", function() {
+        if ($('.sing-in').attr("style") === "display: block;") {
           $('.sing-in').hide(500)
           $('.sing-up').show(500)
           $('#help .mode').text("login")
@@ -255,7 +268,7 @@ if (array_key_exists("inputs", $_SESSION)) {
           $('#help .mode').text("create an account")
         }
       })
-      
+
       // show the error if it containts texts
       if (/[a-zA-Z]/.test($('#debug .container').text())) {
         // custom background of debug
@@ -266,22 +279,28 @@ if (array_key_exists("inputs", $_SESSION)) {
         }
         // show debug
         $('#debug').show(2000)
-        $('#debug .container').animate({padding: "20px"}, 500)
-        setTimeout(function(){
+        $('#debug .container').animate({
+          padding: "1.25rem"
+        }, 500)
+        setTimeout(function() {
           $('body').css("background", "#d4d4d4")
         }, 0)
       } else {
         // hide error
         $('#errors').hide()
-        $('#debug .container').animate({padding: "0px"}, 200)
+        $('#debug .container').animate({
+          padding: "0"
+        }, 200)
       }
 
       // tap to the window and the debug hidden
-      $('body').on("click", function(){
-        $('#debug .container').animate({padding: "0px"}, 500)
+      $('body').on("click", function() {
+        $('#debug .container').animate({
+          padding: "0"
+        }, 500)
         $('#debug').delay(500)
-                  .hide(500)
-        setTimeout(function(){
+          .hide(500)
+        setTimeout(function() {
           $('body').css("background", "#f8f9fa")
         }, 400)
       })

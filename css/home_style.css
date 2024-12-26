@@ -3,7 +3,7 @@
   --font-dark-color--: #212529;
   --bg-light-color--: #f8f9fa;
   --bg-dark-color--: #1a1c28;
-  --green-color--: #04AA6D;
+  --green-color--: #04aa6d;
 }
 ::-webkit-scrollbar {
   width: 0;
@@ -26,7 +26,7 @@ ul {
   text-align: center;
   background: #90763b;
   color: var(--bg-light-color--);
-  border-radius: 10px;
+  border-radius: 1rem;
   box-sizing: border-box;
   overflow: hidden;
   position: absolute;
@@ -41,5 +41,4 @@ ul {
 #debug .loading {
   width: 0;
   background: var(--bg-dark-color--);
-  border-radius: 0 0 10px 10px;
 }

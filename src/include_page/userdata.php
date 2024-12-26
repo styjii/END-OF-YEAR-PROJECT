@@ -4,14 +4,16 @@ include './database/db_connect.php';
 
 
 // ----------------- input validation -----------------
-function try_input(string $input): string {
+function try_input(string $input): string
+{
   $input = trim($input);
   $input = stripslashes($input);
   $input = htmlspecialchars($input);
 
   return $input;
 }
-function emailValidation(string &$email, array &$errors): void {
+function emailValidation(string &$email, array &$errors): void
+{
   if (empty($email)) {
     $errors["email"] = "email is required !";
   } else {
@@ -21,7 +23,8 @@ function emailValidation(string &$email, array &$errors): void {
     }
   }
 }
-function passwordValidation(string &$password, array &$errors): void {
+function passwordValidation(string &$password, array &$errors): void
+{
   if (empty($password)) {
     $errors["password"] = "password is required !";
   } else {
@@ -30,13 +33,14 @@ function passwordValidation(string &$password, array &$errors): void {
 
     if (!preg_match($pattern, $password)) {
       $errors["password"] = "Password minimul length should be 8. <br>" .
-                            "at least one uppercase letter, <br>" . 
-                            "at least one lowercase letter, <br>" .
-                            "and one digit";
+        "at least one uppercase letter, <br>" .
+        "at least one lowercase letter, <br>" .
+        "and one digit";
     }
   }
 }
-function confirmPasswordValidation(string $password, string &$confirmpassword, array &$errors): void {
+function confirmPasswordValidation(string $password, string &$confirmpassword, array &$errors): void
+{
   if (empty($confirmpassword)) {
     $errors['confirmpassword'] = "confirm password required !";
   } else {
@@ -46,7 +50,8 @@ function confirmPasswordValidation(string $password, string &$confirmpassword, a
     }
   }
 }
-function otherInputValidation(string &$input, string $inputName, array &$errors, $pattern): void {
+function otherInputValidation(string &$input, string $inputName, array &$errors, $pattern): void
+{
   if (empty($input)) {
     $errors[$inputName] = "$inputName is required !";
   } else {
@@ -56,7 +61,8 @@ function otherInputValidation(string &$input, string $inputName, array &$errors,
     }
   }
 }
-function usernameValidaton(string &$input, array &$errors): void {
+function usernameValidaton(string &$input, array &$errors): void
+{
   if (empty($input)) {
     $errors["username"] = "username is required !";
   } else {
@@ -67,7 +73,8 @@ function usernameValidaton(string &$input, array &$errors): void {
     }
   }
 }
-function fullnameValidaton(string &$input, array &$errors): void {
+function fullnameValidaton(string &$input, array &$errors): void
+{
   if (empty($input)) {
     $errors["fullname"] = "fullname is required !";
   } else {
@@ -78,7 +85,8 @@ function fullnameValidaton(string &$input, array &$errors): void {
     }
   }
 }
-function phonenumberValidaton(string &$input, array &$errors): void {
+function phonenumberValidaton(string &$input, array &$errors): void
+{
   if (empty($input)) {
     $errors["phonenumber"] = "phone number is required !";
   } else {
@@ -89,7 +97,8 @@ function phonenumberValidaton(string &$input, array &$errors): void {
     }
   }
 }
-function localisationValidaton(string &$input, array &$errors): void {
+function localisationValidaton(string &$input, array &$errors): void
+{
   if (empty($input)) {
     $errors["phonenumber"] = "phone number is required !";
   } else {
@@ -100,14 +109,16 @@ function localisationValidaton(string &$input, array &$errors): void {
     }
   }
 }
-function textareaValidation(&$textarea, &$errors) {
+function textareaValidation(&$textarea, &$errors)
+{
   if (empty($textarea)) {
     $errors['message'] = "message is required !";
   } else {
     $textarea = try_input($textarea);
   }
 }
-function serialValidation(string &$input, array &$errors) {
+function serialValidation(string &$input, array &$errors)
+{
   if (empty($input)) {
     $errors["serialNumber"] = "Serial number is required !";
   } else {
@@ -122,16 +133,16 @@ function serialValidation(string &$input, array &$errors) {
 // if the user sumbits form information
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $errors = [];
-  
+
   // ----------------- login -----------------
-  if (array_key_exists('emaillog', $_POST)){
+  if (array_key_exists('emaillog', $_POST)) {
     $email = $_POST["emaillog"];
     $password = $_POST["passwordlog"];
 
     emailValidation($email, $errors);
     passwordValidation($password, $errors);
 
-    if(empty($errors)) {
+    if (empty($errors)) {
       // Prepare and execute
       $stmt = $conn->prepare("SELECT password FROM userdata WHERE email = ?");
       $stmt->bind_param("s", $email);
@@ -139,21 +150,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $stmt->store_result();
 
       if ($stmt->num_rows > 0) {
-          $stmt->bind_result($db_password);
-          $stmt->fetch();
+        $stmt->bind_result($db_password);
+        $stmt->fetch();
 
-          if ($password === $db_password) {
-            $_SESSION["email"] = $email;
-          } else {
-            $errors["invalid_password"] = "Incorrect password";
-          }
+        if ($password === $db_password) {
+          $_SESSION["email"] = $email;
+        } else {
+          $errors["invalid_password"] = "Incorrect password";
+        }
       } else {
-          $errors["no_exists_email"] = "Email not found";
+        $errors["no_exists_email"] = "Email not found";
       }
 
       $stmt->close();
     }
-
   }
 
   // ----------------- register -----------------
@@ -175,9 +185,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     localisationValidaton($localisation, $errors);
 
 
-    if(empty($errors)) {
+    if (empty($errors)) {
       // create serialnumber
-      do{
+      do {
         $serial = rand(0, 99999);
         $serial = (string) sprintf("%05d", $serial);
 
@@ -205,21 +215,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       } else if ($checkUsername->num_rows > 0) {
         $errors['exist_user'] = "Username ID already exists";
       } else {
-          // Prepare and bind
-          $stmt = $conn->prepare("INSERT INTO userdata (username, password, email, fullname, phonenumber, localisation, serial) VALUES (?, ?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param("sssssss", $username, $password, $email, $fullname, $phonenumber, $localisation, $serial);
+        // Prepare and bind
+        $stmt = $conn->prepare("INSERT INTO userdata (username, password, email, fullname, phonenumber, localisation, serial) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssss", $username, $password, $email, $fullname, $phonenumber, $localisation, $serial);
 
-          if ($stmt->execute()) {
-            $_SESSION['email'] = $email;
-            $_SESSION["serial"] = $serial;
-          } else {
-            $errors["error"] = "Error: " . $stmt->error;
-          }
+        if ($stmt->execute()) {
+          $_SESSION['email'] = $email;
+          $_SESSION["serial"] = $serial;
+        } else {
+          $errors["error"] = "Error: " . $stmt->error;
+        }
 
-          $stmt->close();
-          $checkEmail->close();
-          $checkUsername->close();
-          $checkSerial->close();
+        $stmt->close();
+        $checkEmail->close();
+        $checkUsername->close();
+        $checkSerial->close();
       }
     }
   }
@@ -251,8 +261,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     passwordValidation($password, $errors);
     confirmPasswordValidation($password, $confirmpassword, $errors);
 
-    
-    if(empty($errors)) {
+
+    if (empty($errors)) {
       // Check if email already exists
       $checkEmail = $conn->prepare("SELECT email FROM userdata WHERE email = ?");
       $checkEmail->bind_param("s", $email);
@@ -297,7 +307,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $_SESSION["errors"] = $errors;
       $_SESSION["inputs"] = $_POST;
     }
-    
+
     header("Location: ../../index.php");
   } else {
     header("Location: ./../page/home.php");
@@ -306,4 +316,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   $conn->close();
 }
-?>
